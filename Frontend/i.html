@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PolluTrack</title>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 40px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        h1 {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .architecture-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(4, auto);
+            gap: 30px;
+            position: relative;
+        }
+
+        .component {
+            background: linear-gradient(145deg, #ffffff, #f0f0f0);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .component::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 15px 15px 0 0;
+        }
+
+        .component:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+            border-color: rgba(102, 126, 234, 0.3);
+        }
+
+        .component h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+            font-weight: 600;
+        }
+
+        .component p {
+            color: #666;
+            line-height: 1.6;
+            font-size: 0.95em;
+        }
+
+        .tech-stack {
+            margin-top: 12px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .tech-tag {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 500;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+        }
+
+        /* Grid positioning */
+        .frontend { grid-column: 1; grid-row: 1; }
+        .backend { grid-column: 2; grid-row: 1; }
+        .database { grid-column: 3; grid-row: 1; }
+        .ml-engine-1 { grid-column: 1; grid-row: 2; }
+        .ml-engine-2 { grid-column: 1; grid-row: 3; }
+        .satellite-data { grid-column: 2; grid-row: 3; }
+        .ground-truth { grid-column: 3; grid-row: 3; }
+        .alert-system { grid-column: 3; grid-row: 2; }
+
+        /* Arrows */
+        .arrow {
+            position: absolute;
+            z-index: 10;
+            filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.3));
+        }
+
+        .arrow-horizontal {
+            width: 80px;
+            height: 6px;
+            background: linear-gradient(90deg, #ff6b6b, #4ecdc4);
+            border-radius: 3px;
+            position: relative;
+        }
+
+        .arrow-vertical {
+            width: 6px;
+            height: 80px;
+            background: linear-gradient(180deg, #ff6b6b, #4ecdc4);
+            border-radius: 3px;
+            position: relative;
+        }
+
+        .arrow::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-style: solid;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+        }
+
+        .arrow-right::after {
+            right: -12px;
+            top: -6px;
+            border-left: 15px solid #4ecdc4;
+            border-top: 9px solid transparent;
+            border-bottom: 9px solid transparent;
+        }
+
+        .arrow-down::after {
+            bottom: -12px;
+            left: -6px;
+            border-top: 15px solid #4ecdc4;
+            border-left: 9px solid transparent;
+            border-right: 9px solid transparent;
+        }
+
+        .arrow-up::after {
+            top: -12px;
+            left: -6px;
+            border-bottom: 15px solid #4ecdc4;
+            border-left: 9px solid transparent;
+            border-right: 9px solid transparent;
+        }
+
+        /* Specific arrow positions with better placement */
+        .arrow1 { top: 85px; left: 360px; }
+        .arrow2 { top: 85px; left: 740px; }
+        .arrow3 { top: 170px; left: 1120px; }
+        .arrow4 { top: 270px; left: 360px; }
+        .arrow5 { top: 350px; left: 185px; }
+        .arrow6 { top: 350px; left: 565px; }
+        .arrow7 { top: 350px; left: 945px; }
+
+        /* Add pulsing animation for arrows */
+        .arrow {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+
+        /* Special styling for different component types */
+        .ml-component {
+            background: linear-gradient(145deg, #e8f5e8, #d4f1d4);
+        }
+
+        .ml-component::before {
+            background: linear-gradient(90deg, #4CAF50, #45a049);
+        }
+
+        .data-component {
+            background: linear-gradient(145deg, #fff3e0, #ffe0b2);
+        }
+
+        .data-component::before {
+            background: linear-gradient(90deg, #ff9800, #f57c00);
+        }
+
+        .optional {
+            opacity: 0.8;
+            border: 2px dashed rgba(102, 126, 234, 0.3);
+        }
+
+        .optional::before {
+            background: linear-gradient(90deg, rgba(102, 126, 234, 0.7), rgba(118, 75, 162, 0.7));
+        }
+
+        /* Responsive design */
+        @media (max-width: 1024px) {
+            .architecture-grid {
+                grid-template-columns: repeat(2, 1fr);
+                grid-template-rows: repeat(6, auto);
+            }
+            
+            .frontend { grid-column: 1; grid-row: 1; }
+            .backend { grid-column: 2; grid-row: 1; }
+            .database { grid-column: 1; grid-row: 2; }
+            .alert-system { grid-column: 2; grid-row: 2; }
+            .ml-engine-1 { grid-column: 1; grid-row: 3; }
+            .ml-engine-2 { grid-column: 2; grid-row: 3; }
+            .satellite-data { grid-column: 1; grid-row: 4; }
+            .ground-truth { grid-column: 2; grid-row: 4; }
+            
+            .arrow { display: none; }
+        }
+
+        @media (max-width: 768px) {
+            .architecture-grid {
+                grid-template-columns: 1fr;
+                grid-template-rows: repeat(8, auto);
+            }
+            
+            .component { grid-column: 1; }
+            .frontend { grid-row: 1; }
+            .backend { grid-row: 2; }
+            .database { grid-row: 3; }
+            .alert-system { grid-row: 4; }
+            .ml-engine-1 { grid-row: 5; }
+            .ml-engine-2 { grid-row: 6; }
+            .satellite-data { grid-row: 7; }
+            .ground-truth { grid-row: 8; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>PolluTrack 🌍</h1>
+        
+        <div class="architecture-grid">
+            <!-- Frontend -->
+            <div class="component frontend">
+                <h3>📱 Frontend (Client)</h3>
+                <p>Interactive web application for data visualization and user interaction</p>
+                <div class="tech-stack">
+                    <span class="tech-tag">HTML</span>
+                    <span class="tech-tag">CSS</span>
+                    <span class="tech-tag">JavaScript</span>
+                    <span class="tech-tag">Shapely</span>
+                    <span class="tech-tag">GeoPandas</span>
+                    <span class="tech-tag">Plotly Express</span>
+                </div>
+            </div>
+
+            <!-- Backend -->
+            <div class="component backend">
+                <h3>⚡ Backend (Server)</h3>
+                <p>High-performance API server handling requests and business logic</p>
+                <div class="tech-stack">
+                    <span class="tech-tag">FastAPI</span>
+                    <span class="tech-tag">Python</span>
+                    <span class="tech-tag">Uvicorn</span>
+                </div>
+            </div>
+
+            <!-- Database -->
+            <div class="component database">
+                <h3>🗄️ Database</h3>
+                <p>Persistent storage for predictions and system data</p>
+                <div class="tech-stack">
+                    <span class="tech-tag">Predictions</span>
+                    <span class="tech-tag">Metadata</span>
+                </div>
+            </div>
+
+            <!-- ML Engine 1 -->
+            <div class="component ml-engine-1 ml-component">
+                <h3>🤖 ML Prediction Engine</h3>
+                <p>Primary machine learning model for satellite data analysis</p>
+                <div class="tech-stack">
+                    <span class="tech-tag">Random Forest</span>
+                    <span class="tech-tag">Scikit-learn</span>
+                </div>
+            </div>
+
+            <!-- ML Engine 2 -->
+            <div class="component ml-engine-2 ml-component">
+                <h3>🔬 ML Prediction Engine</h3>
+                <p>Secondary prediction model for ground truth validation</p>
+                <div class="tech-stack">
+                    <span class="tech-tag">Random Forest</span>
+                    <span class="tech-tag">Scikit-learn</span>
+                </div>
+            </div>
+
+            <!-- Satellite Data -->
+            <div class="component satellite-data data-component">
+                <h3>🛰️ Satellite Data</h3>
+                <p>Remote sensing data from INSAT-3D satellite</p>
+                <div class="tech-stack">
+                    <span class="tech-tag">INSAT-3D</span>
+                    <span class="tech-tag">Geospatial</span>
+                </div>
+            </div>
+
+            <!-- Ground Truth -->
+            <div class="component ground-truth data-component">
+                <h3>🌍 Ground Truth</h3>
+                <p>Validated reference data from CPCB monitoring stations</p>
+                <div class="tech-stack">
+                    <span class="tech-tag">CPCB</span>
+                    <span class="tech-tag">Validation</span>
+                </div>
+            </div>
+
+            <!-- Alert System -->
+            <div class="component alert-system optional">
+                <h3>🚨 Alert System</h3>
+                <p>Optional notification system for threshold-based alerts</p>
+                <div class="tech-stack">
+                    <span class="tech-tag">Notifications</span>
+                    <span class="tech-tag">Monitoring</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Connection Arrows -->
+        <div class="arrow arrow1 arrow-horizontal arrow-right"></div>
+        <div class="arrow arrow2 arrow-horizontal arrow-right"></div>
+        <div class="arrow arrow3 arrow-vertical arrow-down"></div>
+        <div class="arrow arrow4 arrow-vertical arrow-down"></div>
+        <div class="arrow arrow5 arrow-vertical arrow-up"></div>
+        <div class="arrow arrow6 arrow-vertical arrow-up"></div>
+        <div class="arrow arrow7 arrow-vertical arrow-up"></div>
+    </div>
+</body>
+</html>
